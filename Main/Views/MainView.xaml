@@ -6,7 +6,7 @@
         xmlns:models="clr-namespace:Main.Models"
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
-        Title="Der Mergonator v1.0 ©nyTEC" Height="900" Width="1038">
+        Title="Der Mergonator v1.0.1 ©nyTEC" Height="900" Width="1038">
 
     <Grid Margin="10,0,0,0">
         <Grid.ColumnDefinitions>

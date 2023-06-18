@@ -90,34 +90,49 @@ public class MainViewModel : BaseViewModel
                            return;
 
                        var pagesToMerge = Pages.Where(p => p.Keep).ToList();
-                       var stream       = new FileStream(SettingsViewModel.OutputDirectory + "\\" + $"{FileName}.pdf", FileMode.Create, FileAccess.Write);
 
-                       var document = new Document(PageSize.A4);
-                       var copy     = new PdfCopy(document, stream);
-                       document.Open();
-
-                       foreach (var file in fileNames)
+                       if (!pagesToMerge.Any())
                        {
-                           using var reader = new PdfReader(file);
+                           var caption = "Reminder";
 
-                           foreach (var page in pagesToMerge.Where(p => file.Contains(p.FileName)))
-                           {
-                               var pdfPage = copy.GetImportedPage(reader, page.PageNumber);
-                               copy.AddPage(pdfPage);
-                           }
+                           var messageBoxText = "No Pages selected";
+
+                           var button = MessageBoxButton.OK;
+                           var icon   = MessageBoxImage.Warning;
+
+                           MessageBox.Show(messageBoxText, caption, button, icon, MessageBoxResult.Yes);
                        }
+                       else
+                       {
+                           var stream = new FileStream(SettingsViewModel.OutputDirectory + "\\" + $"{FileName}.pdf", FileMode.Create, FileAccess.Write);
 
-                       document.Close();
+                           var document = new Document(PageSize.A4);
+                           var copy     = new PdfCopy(document, stream);
+                           document.Open();
 
-                       var caption = "Success!";
+                           foreach (var file in fileNames)
+                           {
+                               using var reader = new PdfReader(file);
 
-                       var messageBoxText = "Generated Pdf saved to Output Directory" + Environment.NewLine + Environment.NewLine +
-                                            $"{SettingsViewModel.OutputDirectory}\\{FileName}";
+                               foreach (var page in pagesToMerge.Where(p => file.Contains(p.FileName)))
+                               {
+                                   var pdfPage = copy.GetImportedPage(reader, page.PageNumber);
+                                   copy.AddPage(pdfPage);
+                               }
+                           }
 
-                       var button = MessageBoxButton.OK;
-                       var icon   = MessageBoxImage.Information;
+                           document.Close();
 
-                       MessageBox.Show(messageBoxText, caption, button, icon, MessageBoxResult.Yes);
+                           var caption = "Success!";
+
+                           var messageBoxText = "Generated Pdf saved to Output Directory" + Environment.NewLine + Environment.NewLine +
+                                                $"{SettingsViewModel.OutputDirectory}\\{FileName}";
+
+                           var button = MessageBoxButton.OK;
+                           var icon   = MessageBoxImage.Information;
+
+                           MessageBox.Show(messageBoxText, caption, button, icon, MessageBoxResult.Yes);
+                       }
                    })
                   .ConfigureAwait(false);
     }, () => true);
