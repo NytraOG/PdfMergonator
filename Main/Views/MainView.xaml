@@ -5,11 +5,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 
         mc:Ignorable="d"
-        Title="MainView" Height="450" Width="800">
+        Title="MainView" Height="461" Width="800">
 
     <Grid >
-        <TextBox TextWrapping="Wrap" Text="{Binding TestText}" Margin="531,37,201,371" Height=" 50" Width=" 100"/>
-        <Button Margin="115,101,427,204" Command="{Binding TestCommand}">
-        </Button>
+        <Button Content="Import" Command="{Binding ImportFilesCommand}" HorizontalAlignment="Left" Margin="10,381,0,0" VerticalAlignment="Top" Width="100" Height="30"/>
+        <TextBox HorizontalAlignment="Center" Margin="0,10,0,0" TextWrapping="Wrap" Text="{Binding PdfTextContent}" VerticalAlignment="Top" Width="780" Height="366"/>
+        <Button Content="Clear" Command="{Binding ClearCommand}" HorizontalAlignment="Left" Margin="115,381,0,0" VerticalAlignment="Top" Width="100" Height="30"/>
     </Grid>
 </Window>
