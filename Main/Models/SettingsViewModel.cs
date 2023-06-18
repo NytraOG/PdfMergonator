@@ -1,11 +1,15 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Main.Models;
 
 public class SettingsViewModel : BaseViewModel
 {
-    private string filePath;
+    private ICommand? cancelCommand;
+    private string    filePath;
+    private ICommand? saveCommand;
 
     public SettingsViewModel(MainViewModel mainViewModel)
     {
@@ -20,6 +24,21 @@ public class SettingsViewModel : BaseViewModel
     }
 
     public MainViewModel MainViewModel { get; }
+
+    public ICommand SaveCommand => saveCommand ??= new CommandHandler(async () =>
+    {
+        await Task.Run(() => { })
+                  .ConfigureAwait(false);
+    }, () => true);
+
+    public ICommand CancelCommand => cancelCommand ??= new CommandHandler(async () =>
+    {
+        await Task.Run(() =>
+                   {
+                       MainViewModel.CloseSettings();
+                   })
+                  .ConfigureAwait(false);
+    }, () => true);
 
     public string FilePath
     {

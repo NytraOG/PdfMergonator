@@ -17,7 +17,9 @@
                 VerticalAlignment="Top" Width="100" Height="30" />
         <Button Content="Clear" Command="{Binding ClearCommand}" HorizontalAlignment="Left" Margin="115,381,0,0"
                 VerticalAlignment="Top" Width="100" Height="30" />
-        <Button Content="Settings" HorizontalAlignment="Center" Margin="0,381,0,0" VerticalAlignment="Top" Width="98" Height="30" Click="Button_Click"/>
+        <Button Content="Export" Command="{Binding ExportFilesCommand}" HorizontalAlignment="Center" Margin="0,381,0,0" VerticalAlignment="Top" Height="30"
+                Width="100" />
+        <Button Content="Settings" Command="{Binding OpenSettingsCommand}" HorizontalAlignment="Left" Margin="324,381,0,0" VerticalAlignment="Top" Width="98" Height="30"/>
         <ListView ItemsSource="{Binding Pages}" Margin="10,10,10,68" Grid.ColumnSpan="2">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">

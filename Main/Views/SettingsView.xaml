@@ -5,10 +5,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:Main.Views"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
         Title="SettingsView" Height="200" Width="300">
     <Grid>
-        <TextBox HorizontalAlignment="Left" Margin="10,41,0,0" TextWrapping="Wrap" Text="{Binding FilePath}" VerticalAlignment="Top" Width="248"/>
+        <TextBox HorizontalAlignment="Left" IsReadOnly="True" Margin="10,41,0,0" TextWrapping="Wrap" Text="{Binding FilePath}" VerticalAlignment="Top" Width="248"/>
         <Label Content="Output Directory:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="26"/>
-
+        <Button Content="Cancel" Command="{Binding CancelCommand}" HorizontalAlignment="Left" Margin="194,138,0,0" VerticalAlignment="Top" Width="70"/>
+        <Button Content="Save" Command="{Binding SaveCommand}" HorizontalAlignment="Left" Margin="120,138,0,0" VerticalAlignment="Top" Width="70" Height="20"/>
     </Grid>
 </Window>

@@ -11,12 +11,12 @@ public partial class MainView : Window
 
     private void Button_Click(object sender, RoutedEventArgs e)
     {
-        var view = new SettingsView
-        {
-            Content = new SettingsViewModel(new MainViewModel(new List<string>())),
-            Owner   = this
-        };
-
-        view.ShowDialog();
+        // var view = new SettingsView
+        // {
+        //     Content = new SettingsViewModel(new MainViewModel(new List<string>())),
+        //     Owner   = this
+        // };
+        //
+        // view.ShowDialog();
     }
 }

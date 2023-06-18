@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
+using iTextSharp.text;
 using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.parser;
 using Main.Views;
@@ -16,19 +20,23 @@ namespace Main.Models;
 public class MainViewModel : BaseViewModel
 {
     private ICommand? clearCommand;
+    private ICommand? exportFilesCommand;
+    private string[]  fileNames;
     private ICommand? importFilesCommand;
     private ICommand? openSettingsCommand;
     private string    pdfTextContent = "Empty";
 
     public MainViewModel(List<string> arguments)
     {
-        Arguments        = arguments;
-        PdfPageViewModel = new PdfPageViewModel(this);
+        Arguments         = arguments;
+        PdfPageViewModel  = new PdfPageViewModel(this);
+        SettingsViewModel = new SettingsViewModel(this);
     }
 
-    public ObservableCollection<PdfPageViewModel> Pages            { get; } = new();
-    public PdfPageViewModel                       PdfPageViewModel { get; }
-    public List<string>                           Arguments        { get; }
+    public ObservableCollection<PdfPageViewModel> Pages             { get; } = new();
+    public PdfPageViewModel                       PdfPageViewModel  { get; }
+    public SettingsViewModel                      SettingsViewModel { get; }
+    public List<string>                           Arguments         { get; }
 
     public string PdfTextContent
     {
@@ -44,10 +52,15 @@ public class MainViewModel : BaseViewModel
     {
         await Task.Run(() =>
                    {
-
+                       SettingsUiThread = new Thread(OpenSettings);
+                       SettingsUiThread.SetApartmentState(ApartmentState.STA);
+                       SettingsUiThread.IsBackground = false;
+                       SettingsUiThread.Start();
                    })
                   .ConfigureAwait(false);
     }, () => true);
+
+    public Thread SettingsUiThread { get; set; }
 
     public ICommand ClearCommand => clearCommand ??= new CommandHandler(async () =>
     {
@@ -55,6 +68,35 @@ public class MainViewModel : BaseViewModel
                    {
                        PdfTextContent = string.Empty;
                        Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, () => Pages.Clear());
+                   })
+                  .ConfigureAwait(false);
+    }, () => true);
+
+    public ICommand ExportFilesCommand => exportFilesCommand ??= new CommandHandler(async () =>
+    {
+        await Task.Run(() =>
+                   {
+                       using var stream   = new FileStream(SettingsViewModel.FilePath + "Export.pdf", FileMode.Create, FileAccess.Write);
+                       var       document = new Document(PageSize.A4);
+                       document.Open();
+                       var writer       = PdfWriter.GetInstance(document, stream);
+                       var pagesToMerge = Pages.Where(p => p.Keep).ToList();
+
+                       foreach (var fileName in fileNames)
+                       {
+                           var reader = new PdfReader(fileName);
+                           var pcb    = writer.DirectContentUnder;
+
+                           foreach (var page in pagesToMerge.Where(p => fileName.Contains(p.FileName)))
+                           {
+                               document.NewPage();
+                               var pdfPage = writer.GetImportedPage(reader, page.PageNumber);
+                               pcb.AddTemplate(pdfPage, 0, 0);
+                           }
+                       }
+
+                       document.Close();
+                       writer.Close();
                    })
                   .ConfigureAwait(false);
     }, () => true);
@@ -75,7 +117,7 @@ public class MainViewModel : BaseViewModel
                        if (result != true)
                            return;
 
-                       var fileNames = dialog.FileNames;
+                       fileNames = dialog.FileNames;
 
                        foreach (var fileName in fileNames)
                        {
@@ -107,4 +149,18 @@ public class MainViewModel : BaseViewModel
                    })
                   .ConfigureAwait(false);
     }, () => true);
+
+    private void OpenSettings()
+    {
+        var view = new SettingsView
+        {
+            Topmost     = true,
+            DataContext = SettingsViewModel
+        };
+        view.Show();
+
+        Dispatcher.Run();
+    }
+
+    public void CloseSettings() { }
 }
