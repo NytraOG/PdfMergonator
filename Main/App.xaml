@@ -1,0 +1,12 @@
+﻿<Application x:Class="Main.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:viewModels="clr-namespace:Main.Models"
+             xmlns:views="clr-namespace:Main.Views">
+    <Application.Resources>
+        <DataTemplate DataType="{x:Type viewModels:PdfPageViewModel}">
+            <views:PdfPageView />
+        </DataTemplate>
+
+    </Application.Resources>
+</Application>
