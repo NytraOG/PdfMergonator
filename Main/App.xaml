@@ -7,6 +7,8 @@
         <DataTemplate DataType="{x:Type viewModels:PdfPageViewModel}">
             <views:PdfPageView />
         </DataTemplate>
-
+        <DataTemplate DataType="{x:Type viewModels:SettingsViewModel}">
+            <views:SettingsView />
+        </DataTemplate>
     </Application.Resources>
 </Application>

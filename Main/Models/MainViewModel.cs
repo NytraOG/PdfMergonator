@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.parser;
+using Main.Views;
 using Microsoft.Win32;
 
 namespace Main.Models;
@@ -16,6 +17,7 @@ public class MainViewModel : BaseViewModel
 {
     private ICommand? clearCommand;
     private ICommand? importFilesCommand;
+    private ICommand? openSettingsCommand;
     private string    pdfTextContent = "Empty";
 
     public MainViewModel(List<string> arguments)
@@ -38,6 +40,15 @@ public class MainViewModel : BaseViewModel
         }
     }
 
+    public ICommand OpenSettingsCommand => openSettingsCommand ??= new CommandHandler(async () =>
+    {
+        await Task.Run(() =>
+                   {
+
+                   })
+                  .ConfigureAwait(false);
+    }, () => true);
+
     public ICommand ClearCommand => clearCommand ??= new CommandHandler(async () =>
     {
         await Task.Run(() =>
@@ -50,7 +61,7 @@ public class MainViewModel : BaseViewModel
 
     public ICommand ImportFilesCommand => importFilesCommand ??= new CommandHandler(async () =>
     {
-        await Task.Run(async () =>
+        await Task.Run(() =>
                    {
                        var dialog = new OpenFileDialog
                        {
@@ -74,7 +85,6 @@ public class MainViewModel : BaseViewModel
 
                                for (var i = 1; i <= reader.NumberOfPages; i++)
                                {
-
                                    var content          = PdfTextExtractor.GetTextFromPage(reader, i, new LocationTextExtractionStrategy());
                                    var formattedContent = Encoding.UTF8.GetString(Encoding.Convert(Encoding.Default, Encoding.UTF8, Encoding.Default.GetBytes(content)));
 
@@ -86,8 +96,6 @@ public class MainViewModel : BaseViewModel
                                        Content    = formattedContent,
                                        PageNumber = i
                                    };
-
-                                   await Task.Delay(300);
 
                                    Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, () => Pages.Add(pageViewModel));
                                    OnPropertyChanged(nameof(Pages));

@@ -6,20 +6,19 @@
         xmlns:models="clr-namespace:Main.Models"
 
         mc:Ignorable="d"
-        Title="MainView" Height="460" Width="1500">
+        Title="MainView" Height="460" Width="1076">
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="131*" />
-            <ColumnDefinition Width="269*" />
+            <ColumnDefinition />
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Button Content="Import" Command="{Binding ImportFilesCommand}" HorizontalAlignment="Left" Margin="10,381,0,0"
                 VerticalAlignment="Top" Width="100" Height="30" />
-        <TextBox HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="{Binding PdfTextContent}"
-                 VerticalAlignment="Top" Width="481" Height="366" />
         <Button Content="Clear" Command="{Binding ClearCommand}" HorizontalAlignment="Left" Margin="115,381,0,0"
                 VerticalAlignment="Top" Width="100" Height="30" />
-        <ListView ItemsSource="{Binding Pages}" Margin="10,10,10,69" Grid.Column="1">
+        <Button Content="Settings" HorizontalAlignment="Center" Margin="0,381,0,0" VerticalAlignment="Top" Width="98" Height="30" Click="Button_Click"/>
+        <ListView ItemsSource="{Binding Pages}" Margin="10,10,10,68" Grid.ColumnSpan="2">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="Height" Value="50" />
