@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows;
-using Main.Models;
+﻿using System.Windows;
 
 namespace Main.Views;
 

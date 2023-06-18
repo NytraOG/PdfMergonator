@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -24,6 +25,7 @@ public class MainViewModel : BaseViewModel
     private string    fileName = string.Empty;
     private string[]  fileNames;
     private ICommand? importFilesCommand;
+    private ICommand? openOutputDirectoryCommand;
     private ICommand? openSettingsCommand;
 
     public MainViewModel(List<string> arguments)
@@ -71,6 +73,15 @@ public class MainViewModel : BaseViewModel
                   .ConfigureAwait(false);
     }, () => true);
 
+    public ICommand OpenOutputDirectoryCommand => openOutputDirectoryCommand ??= new CommandHandler(async () =>
+    {
+        await Task.Run(() =>
+                   {
+                       Process.Start("explorer", SettingsViewModel.OutputDirectory);
+                   })
+                  .ConfigureAwait(false);
+    }, () => true);
+
     public ICommand ExportFilesCommand => exportFilesCommand ??= new CommandHandler(async () =>
     {
         await Task.Run(() =>
@@ -79,7 +90,7 @@ public class MainViewModel : BaseViewModel
                            return;
 
                        var pagesToMerge = Pages.Where(p => p.Keep).ToList();
-                       var stream       = new FileStream(SettingsViewModel.FilePath + "\\" + $"{FileName}.pdf", FileMode.Create, FileAccess.Write);
+                       var stream       = new FileStream(SettingsViewModel.OutputDirectory + "\\" + $"{FileName}.pdf", FileMode.Create, FileAccess.Write);
 
                        var document = new Document(PageSize.A4);
                        var copy     = new PdfCopy(document, stream);
@@ -101,7 +112,7 @@ public class MainViewModel : BaseViewModel
                        var caption = "Success!";
 
                        var messageBoxText = "Generated Pdf saved to Output Directory" + Environment.NewLine + Environment.NewLine +
-                                            $"{SettingsViewModel.FilePath}\\{FileName}";
+                                            $"{SettingsViewModel.OutputDirectory}\\{FileName}";
 
                        var button = MessageBoxButton.OK;
                        var icon   = MessageBoxImage.Information;

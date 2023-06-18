@@ -4,8 +4,5 @@ namespace Main.Views;
 
 public partial class SettingsView : Window
 {
-    public SettingsView()
-    {
-        InitializeComponent();
-    }
+    public SettingsView() => InitializeComponent();
 }

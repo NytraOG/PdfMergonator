@@ -5,9 +5,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:models="clr-namespace:Main.Models"
         WindowStartupLocation="CenterScreen"
-        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         mc:Ignorable="d"
-        Title="MainView" Height="900" Width="1094">
+        Title="Der Mergonator v1.0 ©nyTEC" Height="900" Width="1038">
 
     <Grid Margin="10,0,0,0">
         <Grid.ColumnDefinitions>
@@ -22,7 +21,7 @@
         <Button Content="Export" Command="{Binding ExportFilesCommand}" HorizontalAlignment="Left" Margin="139,41,0,0"
                 VerticalAlignment="Top" Height="30"
                 Width="126" />
-        <Button Content="Settings" Command="{Binding OpenSettingsCommand}" HorizontalAlignment="Left"
+        <Button Content="Settings" Command="{Binding OpenSettingsCommand}" HorizontalAlignment="Left" IsEnabled="False"
                 Margin="139,76,0,0" VerticalAlignment="Top" Width="126" Height="30" />
         <ListView ItemsSource="{Binding Pages}" Margin="280,10,10,10" Grid.ColumnSpan="3">
             <ListView.ItemContainerStyle>
@@ -42,13 +41,16 @@
                     <GridViewColumn DisplayMemberBinding="{Binding PageNumber}" Header="Page" Width="50" />
                     <GridViewColumn DisplayMemberBinding="{Binding FileName}" Header="File Name" Width="100" />
                     <!-- <GridViewColumn  Header="Preview" Width="100" /> -->
-                    <GridViewColumn DisplayMemberBinding="{Binding Content}" Header="Content" Width="500"  />
+                    <GridViewColumn DisplayMemberBinding="{Binding Content}" Header="Content" Width="500" />
                 </GridView>
             </ListView.View>
         </ListView>
         <Label HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top">
             <TextBlock TextDecorations="Underline">File Name:</TextBlock>
         </Label>
-        <TextBox HorizontalAlignment="Left" MaxWidth="184" MaxHeight="20" Height="20" Margin="81,14,0,0" TextWrapping="Wrap" Text="{Binding FileName}" VerticalAlignment="Top" Width="184"/>
+        <TextBox HorizontalAlignment="Left" MaxWidth="184" MaxHeight="20" Height="20" Margin="81,14,0,0"
+                 TextWrapping="Wrap" Text="{Binding FileName}" VerticalAlignment="Top" Width="184" />
+        <Button Content="Open Output Folder" Command="{Binding OpenOutputDirectoryCommand}" HorizontalAlignment="Left"
+                Margin="10,111,0,0" VerticalAlignment="Top" Width="124" Height="30" />
     </Grid>
 </Window>

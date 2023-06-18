@@ -8,7 +8,7 @@ namespace Main.Models;
 public class SettingsViewModel : BaseViewModel
 {
     private ICommand? cancelCommand;
-    private string    filePath;
+    private string    outputDirectory;
     private ICommand? saveCommand;
 
     public SettingsViewModel(MainViewModel mainViewModel)
@@ -20,7 +20,7 @@ public class SettingsViewModel : BaseViewModel
         if (!Directory.Exists(subFolderPath))
             Directory.CreateDirectory(subFolderPath);
 
-        filePath = subFolderPath;
+        outputDirectory = subFolderPath;
     }
 
     public MainViewModel MainViewModel { get; }
@@ -40,12 +40,12 @@ public class SettingsViewModel : BaseViewModel
                   .ConfigureAwait(false);
     }, () => true);
 
-    public string FilePath
+    public string OutputDirectory
     {
-        get => filePath;
+        get => outputDirectory;
         set
         {
-            filePath = value;
+            outputDirectory = value;
             OnPropertyChanged();
         }
     }
