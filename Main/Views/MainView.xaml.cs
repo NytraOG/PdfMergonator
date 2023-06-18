@@ -4,8 +4,5 @@ namespace Main.Views;
 
 public partial class MainView : Window
 {
-    public MainView()
-    {
-        InitializeComponent();
-    }
+    public MainView() => InitializeComponent();
 }

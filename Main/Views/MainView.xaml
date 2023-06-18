@@ -3,13 +3,42 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:models="clr-namespace:Main.Models"
 
         mc:Ignorable="d"
-        Title="MainView" Height="461" Width="800">
+        Title="MainView" Height="460" Width="1500">
 
-    <Grid >
-        <Button Content="Import" Command="{Binding ImportFilesCommand}" HorizontalAlignment="Left" Margin="10,381,0,0" VerticalAlignment="Top" Width="100" Height="30"/>
-        <TextBox HorizontalAlignment="Center" Margin="0,10,0,0" TextWrapping="Wrap" Text="{Binding PdfTextContent}" VerticalAlignment="Top" Width="780" Height="366"/>
-        <Button Content="Clear" Command="{Binding ClearCommand}" HorizontalAlignment="Left" Margin="115,381,0,0" VerticalAlignment="Top" Width="100" Height="30"/>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="131*" />
+            <ColumnDefinition Width="269*" />
+        </Grid.ColumnDefinitions>
+        <Button Content="Import" Command="{Binding ImportFilesCommand}" HorizontalAlignment="Left" Margin="10,381,0,0"
+                VerticalAlignment="Top" Width="100" Height="30" />
+        <TextBox HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="{Binding PdfTextContent}"
+                 VerticalAlignment="Top" Width="481" Height="366" />
+        <Button Content="Clear" Command="{Binding ClearCommand}" HorizontalAlignment="Left" Margin="115,381,0,0"
+                VerticalAlignment="Top" Width="100" Height="30" />
+        <ListView ItemsSource="{Binding Pages}" Margin="10,10,10,69" Grid.Column="1">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Height" Value="50" />
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Keep" Width="50">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate DataType="{x:Type models:PdfPageViewModel}">
+                                <CheckBox Margin="5, 0" IsChecked="{Binding Keep}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding PageNumber}" Header="Page" Width="50" />
+                    <GridViewColumn DisplayMemberBinding="{Binding FileName}" Header="File Name" Width="100" />
+                    <GridViewColumn DisplayMemberBinding="{Binding Content}" Header="Content" Width="850" />
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 </Window>
