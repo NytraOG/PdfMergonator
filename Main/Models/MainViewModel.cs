@@ -76,27 +76,25 @@ public class MainViewModel : BaseViewModel
     {
         await Task.Run(() =>
                    {
-                       using var stream   = new FileStream(SettingsViewModel.FilePath + "Export.pdf", FileMode.Create, FileAccess.Write);
-                       var       document = new Document(PageSize.A4);
-                       document.Open();
-                       var writer       = PdfWriter.GetInstance(document, stream);
                        var pagesToMerge = Pages.Where(p => p.Keep).ToList();
+                       var stream       = new FileStream(SettingsViewModel.FilePath + "\\" + "Export.pdf", FileMode.Create, FileAccess.Write);
+
+                       var document = new Document(PageSize.A4);
+                       var copy     = new PdfCopy(document, stream);
+                       document.Open();
 
                        foreach (var fileName in fileNames)
                        {
-                           var reader = new PdfReader(fileName);
-                           var pcb    = writer.DirectContentUnder;
+                           using var reader = new PdfReader(fileName);
 
                            foreach (var page in pagesToMerge.Where(p => fileName.Contains(p.FileName)))
                            {
-                               document.NewPage();
-                               var pdfPage = writer.GetImportedPage(reader, page.PageNumber);
-                               pcb.AddTemplate(pdfPage, 0, 0);
+                               var pdfPage = copy.GetImportedPage(reader, page.PageNumber);
+                               copy.AddPage(pdfPage);
                            }
                        }
 
                        document.Close();
-                       writer.Close();
                    })
                   .ConfigureAwait(false);
     }, () => true);
