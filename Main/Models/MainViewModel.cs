@@ -21,10 +21,10 @@ public class MainViewModel : BaseViewModel
 {
     private ICommand? clearCommand;
     private ICommand? exportFilesCommand;
+    private string    fileName = string.Empty;
     private string[]  fileNames;
     private ICommand? importFilesCommand;
     private ICommand? openSettingsCommand;
-    private string    pdfTextContent = "Empty";
 
     public MainViewModel(List<string> arguments)
     {
@@ -38,12 +38,12 @@ public class MainViewModel : BaseViewModel
     public SettingsViewModel                      SettingsViewModel { get; }
     public List<string>                           Arguments         { get; }
 
-    public string PdfTextContent
+    public string FileName
     {
-        get => pdfTextContent;
+        get => fileName;
         set
         {
-            pdfTextContent = value;
+            fileName = value;
             OnPropertyChanged();
         }
     }
@@ -66,7 +66,6 @@ public class MainViewModel : BaseViewModel
     {
         await Task.Run(() =>
                    {
-                       PdfTextContent = string.Empty;
                        Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, () => Pages.Clear());
                    })
                   .ConfigureAwait(false);
@@ -76,18 +75,21 @@ public class MainViewModel : BaseViewModel
     {
         await Task.Run(() =>
                    {
+                       if (!Pages.Any() || !fileNames.Any())
+                           return;
+
                        var pagesToMerge = Pages.Where(p => p.Keep).ToList();
-                       var stream       = new FileStream(SettingsViewModel.FilePath + "\\" + "Export.pdf", FileMode.Create, FileAccess.Write);
+                       var stream       = new FileStream(SettingsViewModel.FilePath + "\\" + $"{FileName}.pdf", FileMode.Create, FileAccess.Write);
 
                        var document = new Document(PageSize.A4);
                        var copy     = new PdfCopy(document, stream);
                        document.Open();
 
-                       foreach (var fileName in fileNames)
+                       foreach (var file in fileNames)
                        {
-                           using var reader = new PdfReader(fileName);
+                           using var reader = new PdfReader(file);
 
-                           foreach (var page in pagesToMerge.Where(p => fileName.Contains(p.FileName)))
+                           foreach (var page in pagesToMerge.Where(p => file.Contains(p.FileName)))
                            {
                                var pdfPage = copy.GetImportedPage(reader, page.PageNumber);
                                copy.AddPage(pdfPage);
@@ -95,6 +97,16 @@ public class MainViewModel : BaseViewModel
                        }
 
                        document.Close();
+
+                       var caption = "Success!";
+
+                       var messageBoxText = "Generated Pdf saved to Output Directory" + Environment.NewLine + Environment.NewLine +
+                                            $"{SettingsViewModel.FilePath}\\{FileName}";
+
+                       var button = MessageBoxButton.OK;
+                       var icon   = MessageBoxImage.Information;
+
+                       MessageBox.Show(messageBoxText, caption, button, icon, MessageBoxResult.Yes);
                    })
                   .ConfigureAwait(false);
     }, () => true);
@@ -117,22 +129,30 @@ public class MainViewModel : BaseViewModel
 
                        fileNames = dialog.FileNames;
 
-                       foreach (var fileName in fileNames)
+                       foreach (var file in fileNames)
                        {
                            if (dialog.CheckFileExists)
                            {
-                               var reader = new PdfReader(fileName);
+                               var reader = new PdfReader(file);
 
                                for (var i = 1; i <= reader.NumberOfPages; i++)
                                {
-                                   var content          = PdfTextExtractor.GetTextFromPage(reader, i, new LocationTextExtractionStrategy());
-                                   var formattedContent = Encoding.UTF8.GetString(Encoding.Convert(Encoding.Default, Encoding.UTF8, Encoding.Default.GetBytes(content)));
+                                   var lines = PdfTextExtractor.GetTextFromPage(reader, i, new LocationTextExtractionStrategy())
+                                                               .Split("\n");
 
-                                   PdfTextContent += i == 1 ? formattedContent : Environment.NewLine + Environment.NewLine + formattedContent;
+                                   var content = lines.Length switch
+                                   {
+                                       1 => lines[0],
+                                       2 => lines[0] + Environment.NewLine + lines[1],
+                                       >= 3 => lines[0] + Environment.NewLine + lines[1] + Environment.NewLine + lines[2],
+                                       _ => string.Empty
+                                   };
+
+                                   var formattedContent = Encoding.UTF8.GetString(Encoding.Convert(Encoding.Default, Encoding.UTF8, Encoding.Default.GetBytes(content)));
 
                                    var pageViewModel = new PdfPageViewModel(this)
                                    {
-                                       FileName   = fileName.Split('\\')[^1],
+                                       FileName   = file.Split('\\')[^1],
                                        Content    = formattedContent,
                                        PageNumber = i
                                    };
@@ -144,6 +164,8 @@ public class MainViewModel : BaseViewModel
                                reader.Close();
                            }
                        }
+
+                       FileName = string.Join('_', Pages.Select(p => p.FileName.Split('.')[0]).Distinct());
                    })
                   .ConfigureAwait(false);
     }, () => true);

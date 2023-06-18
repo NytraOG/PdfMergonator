@@ -4,23 +4,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:models="clr-namespace:Main.Models"
-
+        WindowStartupLocation="CenterScreen"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         mc:Ignorable="d"
-        Title="MainView" Height="460" Width="1076">
+        Title="MainView" Height="900" Width="1094">
 
-    <Grid>
+    <Grid Margin="10,0,0,0">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition />
+            <ColumnDefinition Width="339*" />
+            <ColumnDefinition Width="74*" />
+            <ColumnDefinition Width="413*" />
         </Grid.ColumnDefinitions>
-        <Button Content="Import" Command="{Binding ImportFilesCommand}" HorizontalAlignment="Left" Margin="10,381,0,0"
-                VerticalAlignment="Top" Width="100" Height="30" />
-        <Button Content="Clear" Command="{Binding ClearCommand}" HorizontalAlignment="Left" Margin="115,381,0,0"
-                VerticalAlignment="Top" Width="100" Height="30" />
-        <Button Content="Export" Command="{Binding ExportFilesCommand}" HorizontalAlignment="Center" Margin="0,381,0,0" VerticalAlignment="Top" Height="30"
-                Width="100" />
-        <Button Content="Settings" Command="{Binding OpenSettingsCommand}" HorizontalAlignment="Left" Margin="324,381,0,0" VerticalAlignment="Top" Width="98" Height="30"/>
-        <ListView ItemsSource="{Binding Pages}" Margin="10,10,10,68" Grid.ColumnSpan="2">
+        <Button Content="Import" Command="{Binding ImportFilesCommand}" HorizontalAlignment="Left" Margin="10,41,0,0"
+                VerticalAlignment="Top" Width="124" Height="30" />
+        <Button Content="Clear" Command="{Binding ClearCommand}" HorizontalAlignment="Left" Margin="10,76,0,0"
+                VerticalAlignment="Top" Width="124" Height="30" />
+        <Button Content="Export" Command="{Binding ExportFilesCommand}" HorizontalAlignment="Left" Margin="139,41,0,0"
+                VerticalAlignment="Top" Height="30"
+                Width="126" />
+        <Button Content="Settings" Command="{Binding OpenSettingsCommand}" HorizontalAlignment="Left"
+                Margin="139,76,0,0" VerticalAlignment="Top" Width="126" Height="30" />
+        <ListView ItemsSource="{Binding Pages}" Margin="280,10,10,10" Grid.ColumnSpan="3">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="Height" Value="50" />
@@ -37,9 +41,14 @@
                     </GridViewColumn>
                     <GridViewColumn DisplayMemberBinding="{Binding PageNumber}" Header="Page" Width="50" />
                     <GridViewColumn DisplayMemberBinding="{Binding FileName}" Header="File Name" Width="100" />
-                    <GridViewColumn DisplayMemberBinding="{Binding Content}" Header="Content" Width="850" />
+                    <!-- <GridViewColumn  Header="Preview" Width="100" /> -->
+                    <GridViewColumn DisplayMemberBinding="{Binding Content}" Header="Content" Width="500"  />
                 </GridView>
             </ListView.View>
         </ListView>
+        <Label HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top">
+            <TextBlock TextDecorations="Underline">File Name:</TextBlock>
+        </Label>
+        <TextBox HorizontalAlignment="Left" MaxWidth="184" MaxHeight="20" Height="20" Margin="81,14,0,0" TextWrapping="Wrap" Text="{Binding FileName}" VerticalAlignment="Top" Width="184"/>
     </Grid>
 </Window>
