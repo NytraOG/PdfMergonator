@@ -8,22 +8,55 @@
         mc:Ignorable="d"
         Title="Der Mergonator v1.0.1 ©nyTEC" Height="900" Width="1038">
 
-    <Grid Margin="10,0,0,0">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="339*" />
-            <ColumnDefinition Width="74*" />
-            <ColumnDefinition Width="413*" />
-        </Grid.ColumnDefinitions>
-        <Button Content="Import" Command="{Binding ImportFilesCommand}" HorizontalAlignment="Left" Margin="10,41,0,0"
+    <Grid Margin="0,0,0,0">
+        <DockPanel>
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="Switch" Height="25">
+                    <MenuItem Header="Pdf-Quetsche" />
+                    <MenuItem Header="Mergonator" />
+                    <Separator />
+                    <MenuItem Header="Exit" />
+                </MenuItem>
+            </Menu>
+            <!-- <ToolBarTray DockPanel.Dock="Top"> -->
+            <!--     <ToolBar> -->
+            <!-- -->
+            <!--         <Button Command="Paste" ToolTip="Paste from Windows Clipboard."> -->
+            <!--             <Image Source="/AppIcon.ico" Height="20" /> -->
+            <!--             <Button.ContextMenu> -->
+            <!--                 <MenuItem Click="AddPresetButton_Click" Name="AddPresetButton"> -->
+            <!--                     <MenuItem.Icon> -->
+            <!--                         <Image Source="/AppIcon.ico" Height="20" /> -->
+            <!--                     </MenuItem.Icon> -->
+            <!--                     <MenuItem.Header> -->
+            <!--                         <StackPanel Orientation="Horizontal"> -->
+            <!--                             <TextBlock Text="Switch Tool" /> -->
+            <!--                             <Image Source="/AppIcon.ico" -->
+            <!--                                    Height="10" Margin="2,0,0,0" /> -->
+            <!--                         </StackPanel> -->
+            <!--                     </MenuItem.Header> -->
+            <!--                     <MenuItem.ContextMenu> -->
+            <!--                         <ContextMenu> -->
+            <!--                         </ContextMenu> -->
+            <!--                     </MenuItem.ContextMenu> -->
+            <!--                 </MenuItem> -->
+            <!--          -->
+            <!--             </Button.ContextMenu> -->
+            <!--         </Button> -->
+            <!--     </ToolBar> -->
+            <!-- </ToolBarTray> -->
+            <TextBox AcceptsReturn="True" />
+        </DockPanel>
+        <Button Content="Import" Command="{Binding ImportFilesCommand}" HorizontalAlignment="Left" Margin="10,60,0,0"
                 VerticalAlignment="Top" Width="124" Height="30" />
-        <Button Content="Clear" Command="{Binding ClearCommand}" HorizontalAlignment="Left" Margin="10,76,0,0"
+        <Button Content="Clear" Command="{Binding ClearCommand}" HorizontalAlignment="Left" Margin="10,95,0,0"
                 VerticalAlignment="Top" Width="124" Height="30" />
-        <Button Content="Export" Command="{Binding ExportFilesCommand}" HorizontalAlignment="Left" Margin="139,41,0,0"
+        <Button Content="Export" Command="{Binding ExportFilesCommand}" HorizontalAlignment="Left" Margin="139,60,0,0"
                 VerticalAlignment="Top" Height="30"
                 Width="126" />
         <Button Content="Settings" Command="{Binding OpenSettingsCommand}" HorizontalAlignment="Left" IsEnabled="False"
-                Margin="139,76,0,0" VerticalAlignment="Top" Width="126" Height="30" />
-        <ListView ItemsSource="{Binding Pages}" Margin="280,10,10,10" Grid.ColumnSpan="3">
+                Margin="139,95,0,0" VerticalAlignment="Top" Width="126" Height="30" />
+        <ListView ItemsSource="{Binding Pages}" Margin="280,35,10,10" Grid.ColumnSpan="3">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="Height" Value="50" />
@@ -46,11 +79,11 @@
             </ListView.View>
         </ListView>
         <Label HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top">
-            <TextBlock TextDecorations="Underline">File Name:</TextBlock>
+            <TextBlock TextDecorations="Underline" Margin="0,20,0,0">File Name:</TextBlock>
         </Label>
-        <TextBox HorizontalAlignment="Left" MaxWidth="184" MaxHeight="20" Height="20" Margin="81,14,0,0"
+        <TextBox HorizontalAlignment="Left" MaxWidth="184" MaxHeight="20" Height="20" Margin="81,35,0,0"
                  TextWrapping="Wrap" Text="{Binding FileName}" VerticalAlignment="Top" Width="184" />
         <Button Content="Open Output Folder" Command="{Binding OpenOutputDirectoryCommand}" HorizontalAlignment="Left"
-                Margin="10,111,0,0" VerticalAlignment="Top" Width="124" Height="30" />
+                Margin="10,130,0,0" VerticalAlignment="Top" Width="124" Height="30" />
     </Grid>
 </Window>

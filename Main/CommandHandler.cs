@@ -23,7 +23,7 @@ public class CommandHandler : ICommand
 
     public bool CanExecute(object? parameter) => canExecute.Invoke();
 
-    public async void Execute(object? parameter) => await action();
+    public async void Execute(object? parameter) => await action().ConfigureAwait(false);
 
     public void RaiseCanExecuteChanged() => CommandManager.InvalidateRequerySuggested();
 }
