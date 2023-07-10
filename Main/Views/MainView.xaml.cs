@@ -17,9 +17,8 @@ public partial class MainView : Window
         // view.ShowDialog();
     }
 
-    private void AddPresetButton_Click(object sender, RoutedEventArgs e)
+    private void MenuItem_OnClick(object sender, RoutedEventArgs e)
     {
-        if (sender is FrameworkElement { ContextMenu: not null } addButton)
-            addButton.ContextMenu.IsOpen = true;
+
     }
 }
