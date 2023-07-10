@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -15,18 +16,27 @@ using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.parser;
 using Main.Views;
 using Microsoft.Win32;
+using Wpf.Ui.Common;
 
 namespace Main.Models;
 
-public class MainViewModel : BaseViewModel
+public class MainViewModel : BaseViewModel,
+                             INotifyPropertyChanged
 {
     private ICommand? clearCommand;
+    private object    currentView;
     private ICommand? exportFilesCommand;
-    private string    fileName = string.Empty;
-    private string[]  fileNames;
+    private string    fileName  = string.Empty;
+    private string[]  fileNames = null!;
     private ICommand? importFilesCommand;
     private ICommand? openOutputDirectoryCommand;
     private ICommand? openSettingsCommand;
+
+    public MainViewModel()
+    {
+        PdfPageViewModel  = new PdfPageViewModel(this);
+        SettingsViewModel = new SettingsViewModel(this);
+    }
 
     public MainViewModel(List<string> arguments)
     {
@@ -35,10 +45,20 @@ public class MainViewModel : BaseViewModel
         SettingsViewModel = new SettingsViewModel(this);
     }
 
+    public object CurrentView
+    {
+        get => currentView;
+        set
+        {
+            currentView = value;
+            OnPropertyChanged();
+        }
+    }
+
     public ObservableCollection<PdfPageViewModel> Pages             { get; } = new();
     public PdfPageViewModel                       PdfPageViewModel  { get; }
     public SettingsViewModel                      SettingsViewModel { get; }
-    public List<string>                           Arguments         { get; }
+    public List<string>                           Arguments         { get; } = null!;
 
     public string FileName
     {
@@ -50,11 +70,14 @@ public class MainViewModel : BaseViewModel
         }
     }
 
+    public ICommand LoadPdfQuetscheView => new RelayCommand(OpenSettingsView);
+    public ICommand LoadMergonatorView  => new RelayCommand(OpenMergonatorView);
+
     public ICommand OpenSettingsCommand => openSettingsCommand ??= new CommandHandler(async () =>
     {
         await Task.Run(() =>
                    {
-                       SettingsUiThread = new Thread(OpenSettings);
+                       SettingsUiThread = new Thread(OpenSettingsView);
                        SettingsUiThread.SetApartmentState(ApartmentState.STA);
                        SettingsUiThread.IsBackground = false;
                        SettingsUiThread.Start();
@@ -62,7 +85,7 @@ public class MainViewModel : BaseViewModel
                   .ConfigureAwait(false);
     }, () => true);
 
-    public Thread SettingsUiThread { get; set; }
+    public Thread SettingsUiThread { get; set; } = null!;
 
     public ICommand ClearCommand => clearCommand ??= new CommandHandler(async () =>
     {
@@ -196,14 +219,18 @@ public class MainViewModel : BaseViewModel
                   .ConfigureAwait(false);
     }, () => true);
 
-    private void OpenSettings()
+
+    private void OpenMergonatorView() => CurrentView = new MainView();
+
+    private void OpenSettingsView()
     {
-        var view = new SettingsView
+        var view = new TestControl()
         {
-            Topmost     = true,
+            //Topmost     = true,
             DataContext = SettingsViewModel
         };
-        view.Show();
+
+        CurrentView = view;
 
         Dispatcher.Run();
     }

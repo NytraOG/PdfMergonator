@@ -7,13 +7,13 @@
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
         Title="Der Mergonator v1.0.1 ©nyTEC" Height="900" Width="1038">
-
     <Grid Margin="0,0,0,0">
+        <ContentControl Content="{Binding CurrentView, Mode=OneWay}" />
         <DockPanel>
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="Switch" Height="25">
-                    <MenuItem Header="Pdf-Quetsche" Click="MenuItem_OnClick"/>
-                    <MenuItem Header="Mergonator" />
+                    <MenuItem Header="Pdf-Quetsche" Command="{Binding LoadPdfQuetscheView}" />
+                    <MenuItem Header="Mergonator" Command="{Binding LoadMergonatorView}" />
                     <Separator />
                     <MenuItem Header="Exit" />
                 </MenuItem>
